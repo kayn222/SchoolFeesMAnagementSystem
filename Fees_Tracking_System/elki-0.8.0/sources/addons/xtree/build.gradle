@@ -1,0 +1,6 @@
+description = 'ELKI - X-Tree'
+dependencies {
+  api project(':elki')
+  api project(':elki-index-rtree')
+  testImplementation(testFixtures(project(path: ':elki-test-core')))
+}

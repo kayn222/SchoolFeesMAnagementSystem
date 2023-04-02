@@ -1,0 +1,6 @@
+description = 'ELKI - Outlier Detection Algorithms'
+dependencies {
+  api project(':elki-core')
+  testFixturesApi(testFixtures(project(path: ':elki-test-core')))
+}
+

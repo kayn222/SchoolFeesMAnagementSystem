@@ -1,0 +1,8 @@
+description = 'ELKI - External Distances'
+dependencies {
+  api project(':elki-index-preprocessed')
+  api project(':elki-persistent')
+  // We use clustering algorithms in testing.
+  testImplementation(testFixtures(project(path: ':elki-clustering')))
+  testImplementation(testFixtures(project(path: ':elki-test-core')))
+}

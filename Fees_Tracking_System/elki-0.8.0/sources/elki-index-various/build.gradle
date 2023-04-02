@@ -1,0 +1,5 @@
+description = 'ELKI - Various indexes'
+dependencies {
+  api project(':elki-index')
+  testImplementation(testFixtures(project(path: ':elki-test-core')))
+}

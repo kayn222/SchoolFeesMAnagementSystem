@@ -1,0 +1,12 @@
+elki.index.tree.metrical.covertree.CoverTree$Factory
+elki.index.tree.metrical.covertree.SimplifiedCoverTree$Factory
+elki.index.tree.metrical.vptree.VPTree$Factory vp
+elki.index.tree.metrical.vptree.GNAT$Factory MVPTree mvp
+elki.index.tree.spatial.kd.MemoryKDTree$Factory kd
+elki.index.tree.spatial.kd.SmallMemoryKDTree$Factory smallkd
+elki.index.tree.spatial.kd.MinimalisticMemoryKDTree$Factory minikd
+elki.index.invertedlist.InMemoryInvertedIndex$Factory
+elki.index.laesa.LAESA$Factory
+elki.index.projected.PINN
+elki.index.vafile.VAFile$Factory
+elki.index.vafile.PartialVAFile$Factory

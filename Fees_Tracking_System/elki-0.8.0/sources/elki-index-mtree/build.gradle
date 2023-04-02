@@ -1,0 +1,6 @@
+description = 'ELKI - M-Tree Variants'
+dependencies {
+  api project(':elki-index')
+  // Currently in elki-index: api project(':elki-index-preprocessed')
+  testImplementation(testFixtures(project(path: ':elki-test-core')))
+}

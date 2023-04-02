@@ -1,0 +1,5 @@
+description = 'ELKI - Indexes based on preprocessing'
+dependencies {
+  api project(':elki-database')
+  testImplementation(testFixtures(project(path: ':elki-test-core')))
+}

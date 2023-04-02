@@ -1,0 +1,6 @@
+description = 'ELKI - Itemset Mining'
+dependencies {
+  api project(':elki-core')
+  testImplementation(testFixtures(project(path: ':elki-test-core')))
+}
+

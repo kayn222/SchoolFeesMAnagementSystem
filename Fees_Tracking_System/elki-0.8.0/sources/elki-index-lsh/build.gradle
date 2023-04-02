@@ -1,0 +1,5 @@
+description = 'ELKI - Locality Sensitive Hashing'
+dependencies {
+  api project(':elki-index')
+  testImplementation(testFixtures(project(path: ':elki-test-core')))
+}

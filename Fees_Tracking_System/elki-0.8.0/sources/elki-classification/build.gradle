@@ -1,0 +1,5 @@
+description = 'ELKI - Classification Algorithms'
+dependencies {
+  api project(':elki-core')
+  testImplementation(testFixtures(project(path: ':elki-test-core')))
+}

@@ -1,0 +1,7 @@
+description = 'ELKI - Tutorial Algorithms'
+dependencies {
+  api project(':elki')
+  testImplementation(testFixtures(project(path: ':elki-clustering')))
+  testImplementation(testFixtures(project(path: ':elki-outlier')))
+  testImplementation(testFixtures(project(path: ':elki-test-core')))
+}

@@ -1,0 +1,6 @@
+description = 'ELKI - Time Series'
+dependencies {
+  api project(':elki-outlier')
+  testImplementation(testFixtures(project(path: ':elki-test-core')))
+}
+

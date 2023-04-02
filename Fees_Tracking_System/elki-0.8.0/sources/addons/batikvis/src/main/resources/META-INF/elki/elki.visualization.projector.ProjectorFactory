@@ -1,0 +1,5 @@
+elki.visualization.projector.HistogramFactory
+elki.visualization.projector.ScatterPlotFactory
+elki.visualization.projector.ParallelPlotFactory
+elki.visualization.projector.OPTICSProjectorFactory
+elki.visualization.projector.SilhouettePlotFactory

@@ -1,0 +1,6 @@
+description = 'ELKI - Geography Module'
+dependencies {
+  api project(':elki-core')
+  api project(':elki-index') // For projected indexes
+  testImplementation(testFixtures(project(path: ':elki-test-core')))
+}

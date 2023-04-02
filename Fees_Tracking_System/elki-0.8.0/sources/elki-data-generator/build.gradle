@@ -1,0 +1,6 @@
+description = 'ELKI - Data Generator'
+dependencies {
+  api project(':elki-clustering')
+  api project(':elki-outlier')
+  testImplementation(testFixtures(project(path: ':elki-test-core')))
+}

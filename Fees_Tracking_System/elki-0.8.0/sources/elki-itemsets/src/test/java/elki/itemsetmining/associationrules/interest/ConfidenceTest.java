@@ -1,0 +1,58 @@
+/*
+ * This file is part of ELKI:
+ * Environment for Developing KDD-Applications Supported by Index-Structures
+ *
+ * Copyright (C) 2022
+ * ELKI Development Team
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package elki.itemsetmining.associationrules.interest;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+import elki.algorithm.AbstractSimpleAlgorithmTest;
+import elki.database.Database;
+import elki.datasource.InputStreamDatabaseConnection;
+import elki.datasource.parser.SimpleTransactionParser;
+import elki.itemsetmining.FPGrowth;
+import elki.itemsetmining.associationrules.AssociationRuleGeneration;
+import elki.result.AssociationRuleResult;
+import elki.utilities.ELKIBuilder;
+import elki.utilities.optionhandling.parameterization.ListParameterization;
+
+/**
+ * Unit test for the Confidence metric.
+ * 
+ * @author Erich Schubert
+ * @since 0.7.5
+ */
+public class ConfidenceTest extends AbstractSimpleAlgorithmTest {
+  @Test
+  public void testToyExample() {
+    Database db = makeSimpleDatabase(UNITTEST + "itemsets/increasing5.txt", 5, new ListParameterization() //
+        .addParameter(InputStreamDatabaseConnection.Par.PARSER_ID, SimpleTransactionParser.class));
+    {
+      AssociationRuleGeneration ap = new ELKIBuilder<>(AssociationRuleGeneration.class) //
+          .with(FPGrowth.Par.MINSUPP_ID, 3) //
+          .with(AssociationRuleGeneration.Par.MINMEASURE_ID, 1.) //
+          .with(AssociationRuleGeneration.Par.INTERESTMEASURE_ID, Confidence.class) //
+          .build();
+      AssociationRuleResult res = ap.autorun(db);
+      assertEquals("Size not as expected.", 6, res.getRules().size());
+    }
+  }
+}

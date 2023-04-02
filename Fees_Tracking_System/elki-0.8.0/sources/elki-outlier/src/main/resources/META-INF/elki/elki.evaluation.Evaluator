@@ -1,0 +1,8 @@
+elki.evaluation.outlier.ComputeOutlierHistogram
+elki.evaluation.outlier.OutlierRankingEvaluation
+elki.evaluation.outlier.OutlierROCCurve
+elki.evaluation.outlier.OutlierPrecisionAtKCurve
+elki.evaluation.outlier.OutlierPrecisionRecallCurve
+elki.evaluation.outlier.OutlierPrecisionRecallGainCurve
+elki.evaluation.outlier.OutlierSmROCCurve
+elki.evaluation.outlier.JudgeOutlierScores

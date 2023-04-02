@@ -1,0 +1,22 @@
+subprojects { // We only publish subprojects
+if (!isSnapshot && project.hasProperty("signing.gnupg.keyName") && publishing.publications) { // Not -bundle
+  apply plugin: 'signing'
+  task signPom(type: Sign) {
+    sign project.file("${project.buildDir}/publications/maven/pom-default.xml")
+    outputs.upToDateWhen { false }
+    // onlyIf { needsSigning }
+  }
+  signing {
+    useGpgCmd()
+    required { gradle.taskGraph.hasTask("uploadArchives") }
+    // sign configurations.archives
+    sign publishing.publications.maven
+  }
+  model {
+    // tasks.publishMavenPublicationToMavenLocal { dependsOn project.tasks.withType(Sign) }
+    if (project.hasProperty("sonatypeUsername")) {
+      tasks.publishMavenPublicationToMavenRepository { dependsOn project.tasks.withType(Sign) }
+    }
+    tasks.signPom { dependsOn tasks.generatePomFileForMavenPublication }
+  }
+} }
