@@ -10,13 +10,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JSeparator;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import static javax.management.Query.value;
-import javax.swing.table.DefaultTableModel;
+import weka.core.DenseInstance;
+import weka.core.Instances;
 
 /**
  *
@@ -54,6 +53,47 @@ public class AddFees extends JFrame {
         
     }
     
+    
+   public void createArff() {
+    AddFeesArff arffGenerator = new AddFeesArff();
+    try {
+        Instances data = arffGenerator.createArffFile();
+        System.out.println(data.toString());
+        
+       
+        Connection conn = DriverManager.getConnection("jdbc:derby://localhost:1527/fees_management","root","1234");
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM fees_details");
+
+       while (rs.next()) {
+            String fee_name = rs.getString("fee_name");
+            String fee_name1 = rs.getString("fee_name1");
+            String fee_name2 = rs.getString("fee_name2");
+            String amount = rs.getString("amount");
+            String amount1 = rs.getString("amount1");
+            String amount2 = rs.getString("amount2");
+            String total_amount = rs.getString("total_amount");
+
+            // Ignore empty cells
+            if (fee_name.isEmpty() || amount.isEmpty()) {
+                continue;
+            }
+
+            // Add non-empty cells to the ARFF file
+            double[] values = new double[data.numAttributes()];
+            values[0] = data.attribute(0).addStringValue(fee_name);
+            values[1] = data.attribute(1).addStringValue(fee_name1);
+            values[2] = data.attribute(2).addStringValue(fee_name2);
+            values[3] = Double.parseDouble(amount);
+            values[4] = Double.parseDouble(amount1);
+            values[5] = Double.parseDouble(amount2);
+            values[6] = Double.parseDouble(total_amount);
+            data.add(new DenseInstance(1.0, values));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
     
     public boolean validation()
     {
@@ -210,7 +250,7 @@ public class AddFees extends JFrame {
           pst.setString(17,remark); 
           pst.setInt(18, year1);
           pst.setInt(19, year2);
-          
+          createArff();
          int rowcount = pst.executeUpdate();
          if(rowcount == 1){
              status = "Success";

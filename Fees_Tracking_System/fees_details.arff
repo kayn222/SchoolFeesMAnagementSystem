@@ -1,0 +1,21 @@
+@relation fees_details
+
+@attribute fee_name string
+@attribute fee_name1 string
+@attribute fee_name2 string
+@attribute amount numeric
+@attribute amount1 numeric
+@attribute amount2 numeric
+@attribute total_amount numeric
+
+@data
+'Standard Uniform','Graduation Fee','Tuition Fee',100,4500,5000,9600
+'Standard Uniform','','',1000,0,0,1000
+'P.E Uniform','Standard Uniform',ID,1500,1000,250,2750
+'Graduation Fee','Tuition Fee','',1000,5000,0,6000
+'Standard Uniform','Graduation Fee',ID,1000,2000,150,3150
+'Standard Uniform',ID,'Graduation Fee',500,250,5000,5750
+'Standard Uniform','P.E Uniform',Others,123,125,250,498
+'Standard Uniform','Tuition Fee',ID,1000,3000,150,4150
+'Standard Uniform','Graduation Fee',ID,1000,2000,250,3250
+'P.E Uniform','Tuition Fee',Documents,1500,2000,250,3750

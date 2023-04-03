@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JFrame;
@@ -30,15 +31,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.neuroph.core.NeuralNetwork;
-import org.neuroph.core.data.DataSet;
-import org.neuroph.core.data.DataSetRow;
-import org.neuroph.nnet.MultiLayerPerceptron;
-import org.neuroph.util.TransferFunctionType;
-import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.NumberAxis;
-
 
 
 
@@ -387,7 +381,7 @@ public class ViewAllRecords extends javax.swing.JFrame {
 
 }
                
-public void FeeRevenueCounter() {
+public void FeeRevenueCounter(){
     Connection conn = null;
     Statement stmt = null;
     ResultSet rs = null;
@@ -395,34 +389,25 @@ public void FeeRevenueCounter() {
         conn = DriverManager.getConnection("jdbc:derby://localhost:1527/fees_management","root","1234");
         stmt = conn.createStatement();
         rs = stmt.executeQuery("SELECT fee_name, fee_name1, fee_name2, AMOUNT, AMOUNT1, AMOUNT2 FROM fees_details");
-
-        DataSet dataSet = new DataSet(3, 1);
+        
+        
+        Map<String, Integer> feeSums = new HashMap<String, Integer>();
         while (rs.next()) {
-            double fee1 = rs.getDouble("AMOUNT");
-            double fee2 = rs.getDouble("AMOUNT1");
-            double fee3 = rs.getDouble("AMOUNT2");
-            double sum = fee1 + fee2 + fee3;
-            double[] input = new double[] { fee1, fee2, fee3 };
-            double[] output = new double[] { sum };
-            dataSet.addRow(new DataSetRow(input, output));
+            String fee1 = rs.getString("fee_name");
+            String fee2 = rs.getString("fee_name1");
+            String fee3 = rs.getString("fee_name2");
+            int sum1 = rs.getInt("AMOUNT");
+            int sum2 = rs.getInt("AMOUNT1");
+            int sum3 = rs.getInt("AMOUNT2");
+            
+            updateFeeSum(feeSums, fee1, sum1);
+            updateFeeSum(feeSums, fee2, sum2);
+            updateFeeSum(feeSums, fee3, sum3);
         }
-
-        NeuralNetwork neuralNetwork = new MultiLayerPerceptron(TransferFunctionType.SIGMOID, 3, 3, 1);
-        neuralNetwork.learn(dataSet);
         
-        // Once the network is trained, you can use it to predict the sum of fees for a given input
-        double[] input = new double[] { 100, 200, 300 };
-        neuralNetwork.setInput(input);
-        neuralNetwork.calculate();
-        double[] output = neuralNetwork.getOutput();
-        System.out.println("Predicted sum: " + output[0]);
-        
-        // Create a bar chart
-        DefaultCategoryDataset dataset = createDataset(output[0]);
-        CategoryPlot plot = createChart(dataset);
-        ChartPanel chartPanel = new ChartPanel(new JFreeChart(plot));
-        JFrame frame = new JFrame("Fee Revenue");
-        frame.setContentPane(chartPanel);
+        CategoryDataset dataset = createDataset(feeSums);
+        JFreeChart chart = createChart(dataset);
+        ChartFrame frame = new ChartFrame("Fee Revenue", chart);
         frame.pack();
         frame.setVisible(true);
     } catch (SQLException e) {
@@ -438,18 +423,31 @@ public void FeeRevenueCounter() {
     }
 }
 
-private static DefaultCategoryDataset createDataset(double predictedSum) {
+private static void updateFeeSum(Map<String, Integer> feeSums, String fee, int sum) {
+    if (fee != null) {
+        Integer feeSum = feeSums.get(fee);
+        if (feeSum == null) {
+            feeSum = sum;
+        } else {
+            feeSum += sum;
+        }
+        feeSums.put(fee, feeSum);
+    }
+}
+
+private static CategoryDataset createDataset(Map<String, Integer> feeSums) {
     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-    dataset.addValue(predictedSum, "Sum", "Predicted Sum");
+    for (Map.Entry<String, Integer> entry : feeSums.entrySet()) {
+        dataset.addValue(entry.getValue(), "Sum", entry.getKey());
+        
+    }
     return dataset;
 }
 
-private static CategoryPlot createChart(DefaultCategoryDataset dataset) {
-    CategoryAxis categoryAxis = new CategoryAxis("");
-    NumberAxis numberAxis = new NumberAxis("Sum");
-    BarRenderer renderer = new BarRenderer();
-    CategoryPlot plot = new CategoryPlot(dataset, categoryAxis, numberAxis, renderer);
-    return plot;
+
+private static JFreeChart createChart(CategoryDataset dataset) {
+    JFreeChart chart = ChartFactory.createBarChart("Bar Chart of Unique Value Sums", "Values", "Sum", dataset, PlotOrientation.VERTICAL, false, true, false);
+    return chart;
 }
 
      
@@ -1552,12 +1550,7 @@ private static CategoryPlot createChart(DefaultCategoryDataset dataset) {
     }//GEN-LAST:event_BarGraphDA_btnActionPerformed
 
     private void Fr_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Fr_btnActionPerformed
-        Thread t = new Thread(new Runnable() {
-    public void run() {
         FeeRevenueCounter();
-    }
-});
-t.start();
     }//GEN-LAST:event_Fr_btnActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
